@@ -1,0 +1,96 @@
+version: '3'
+
+vars:
+  PACKAGE_NAME: cockpit-wifi
+  VERSION:
+    sh: git describe --tags --always 2>/dev/null || echo "0.1.0"
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  install-deps:
+    desc: Install Node.js dependencies
+    cmds:
+      - npm ci
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - node_modules/.package-lock.json
+
+  pkg-lib:
+    desc: Download Cockpit shared libraries (dark-theme, page.scss)
+    cmds:
+      - make pkg/lib
+    status:
+      - test -d pkg/lib
+
+  build:
+    desc: Build the plugin for production
+    deps: [install-deps, pkg-lib]
+    env:
+      NODE_ENV: production
+    cmds:
+      - ./build.js
+
+  dev:
+    desc: Build in watch mode for development
+    deps: [install-deps, pkg-lib]
+    cmds:
+      - npm run watch
+
+  devel-install:
+    desc: Install symlink for local development
+    cmds:
+      - mkdir -p ~/.local/share/cockpit
+      - ln -sfn "$(pwd)/dist" ~/.local/share/cockpit/wifi
+
+  devel-uninstall:
+    desc: Remove development symlink
+    cmds:
+      - rm -f ~/.local/share/cockpit/wifi
+
+  install:
+    desc: Install plugin to system (requires root)
+    deps: [build]
+    cmds:
+      - install -d /usr/share/cockpit/wifi
+      - cp -r dist/* /usr/share/cockpit/wifi/
+
+  uninstall:
+    desc: Uninstall plugin from system (requires root)
+    cmds:
+      - rm -rf /usr/share/cockpit/wifi
+      - rm -f /etc/cockpit-wifi/ap.conf
+
+  lint:
+    desc: Run all linters
+    deps: [install-deps]
+    cmds:
+      - npm run eslint
+      - npm run stylelint
+
+  lint-fix:
+    desc: Fix linting issues
+    deps: [install-deps]
+    cmds:
+      - npm run eslint:fix
+      - npm run stylelint:fix
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf dist node_modules
+
+  deb:
+    desc: Build Debian package
+    cmds:
+      - dpkg-buildpackage -us -uc -b
+
+  rpm:
+    desc: Build RPM package
+    cmds:
+      - rpmbuild -ba packaging/rpm/cockpit-wifi.spec

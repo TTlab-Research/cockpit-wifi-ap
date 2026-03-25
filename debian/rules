@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	$(MAKE) pkg/lib
+	npm ci
+	NODE_ENV=production ./build.js
+
+override_dh_auto_install:
+	install -d debian/cockpit-wifi/usr/share/cockpit/wifi
+	cp -r dist/* debian/cockpit-wifi/usr/share/cockpit/wifi/
+	install -d debian/cockpit-wifi/etc/cockpit-wifi
+
+override_dh_auto_clean:
+	rm -rf dist node_modules
+
+override_dh_auto_test:

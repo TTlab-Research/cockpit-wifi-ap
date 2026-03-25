@@ -1,0 +1,24 @@
+Source: cockpit-wifi
+Section: admin
+Priority: optional
+Maintainer: TTlab <info@ttlab.it>
+Build-Depends: debhelper-compat (= 13), nodejs (>= 18), npm
+Standards-Version: 4.6.2
+Homepage: https://github.com/TTlab-official/cockpit-wifi
+
+Package: cockpit-wifi
+Architecture: all
+Depends: cockpit (>= 270), network-manager, python3, dnsmasq, iw, ${misc:Depends}
+Recommends: iptables
+Description: Cockpit plugin for complete WiFi management
+ cockpit-wifi provides a modern web interface for managing WiFi
+ connections and Access Point configuration through Cockpit.
+ .
+ Features:
+  - Scan and connect to WiFi networks
+  - Manage saved WiFi connections
+  - Create and manage WiFi Access Points (hotspot)
+  - DHCP server configuration via dnsmasq
+  - Internet sharing via NAT/masquerading
+  - Dark theme support via PatternFly 6
+  - Real-time dashboard with connection status

@@ -1,0 +1,9 @@
+cockpit-wifi (0.1.0-1) unstable; urgency=medium
+
+  * Initial release
+  * WiFi client: scan, connect, disconnect, delete connections
+  * Access Point: create hotspot, DHCP, NAT/masquerading
+  * Dashboard with real-time status
+  * PatternFly 6 with dark theme support
+
+ -- TTlab <info@ttlab.it>  Sun, 23 Mar 2026 12:00:00 +0100

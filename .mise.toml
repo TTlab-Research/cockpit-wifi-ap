@@ -1,0 +1,75 @@
+[tools]
+node = "22"
+python = "3.12"
+usage = "latest"
+
+[tasks.setup]
+description = "Install all dependencies and download Cockpit libs"
+run = """
+npm ci
+make pkg/lib
+"""
+
+[tasks.build]
+description = "Build the plugin for production"
+depends = ["setup"]
+run = "NODE_ENV=production ./build.js"
+
+[tasks.dev]
+description = "Build in watch mode for development"
+depends = ["setup"]
+run = "ESBUILD_WATCH=true ./build.js"
+
+[tasks.lint]
+description = "Run all linters"
+depends = ["setup"]
+run = """
+npm run eslint
+npm run stylelint
+"""
+
+[tasks."lint:fix"]
+description = "Fix linting issues"
+depends = ["setup"]
+run = """
+npm run eslint:fix
+npm run stylelint:fix
+"""
+
+[tasks.install]
+description = "Install plugin to Cockpit (system-wide, requires sudo)"
+depends = ["build"]
+run = """
+sudo install -d /usr/share/cockpit/wifi
+sudo cp -r dist/* /usr/share/cockpit/wifi/
+sudo install -d /etc/cockpit-wifi
+echo "Installed to /usr/share/cockpit/wifi/"
+echo "Restart Cockpit: sudo systemctl restart cockpit"
+"""
+
+[tasks."install:dev"]
+description = "Install plugin for development (symlink in user dir)"
+depends = ["build"]
+run = """
+mkdir -p ~/.local/share/cockpit
+ln -sfn "$(pwd)/dist" ~/.local/share/cockpit/wifi
+echo "Dev symlink created: ~/.local/share/cockpit/wifi -> $(pwd)/dist"
+echo "Reload Cockpit page to see changes"
+"""
+
+[tasks.uninstall]
+description = "Uninstall plugin from Cockpit"
+run = """
+sudo rm -rf /usr/share/cockpit/wifi
+sudo rm -rf /etc/cockpit-wifi
+rm -f ~/.local/share/cockpit/wifi
+echo "Uninstalled cockpit-wifi"
+"""
+
+[tasks.deb]
+description = "Build Debian package"
+run = "dpkg-buildpackage -us -uc -b"
+
+[tasks.clean]
+description = "Remove build artifacts"
+run = "rm -rf dist node_modules pkg/lib"

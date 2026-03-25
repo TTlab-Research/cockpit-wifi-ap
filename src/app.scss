@@ -1,0 +1,24 @@
+@use "page.scss";
+
+.wifi-signal-bar {
+    display: inline-block;
+    width: 4px;
+    margin-right: 2px;
+    border-radius: 2px;
+    background-color: var(--pf-t--global--color--status--success--default);
+
+    &--weak {
+        background-color: var(--pf-t--global--color--status--danger--default);
+    }
+
+    &--fair {
+        background-color: var(--pf-t--global--color--status--warning--default);
+    }
+}
+
+.wifi-signal-container {
+    display: flex;
+    align-items: flex-end;
+    height: 20px;
+    gap: 2px;
+}

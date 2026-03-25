@@ -1,0 +1,21 @@
+{
+    "requires": {
+        "cockpit": "270"
+    },
+    "tools": {
+        "index": {
+            "label": "WiFi"
+        }
+    },
+    "bridges": [
+        {
+            "privileged": true,
+            "spawn": [
+                "pkexec",
+                "--disable-internal-agent",
+                "cockpit-bridge",
+                "--privileged"
+            ]
+        }
+    ]
+}
