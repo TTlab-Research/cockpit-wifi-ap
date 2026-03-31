@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-deb:
+    name: Build .deb (Debian/Ubuntu)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y devscripts debhelper
+
+      - name: Build .deb package
+        run: |
+          # Extract version from tag (strip leading 'v')
+          VERSION="${GITHUB_REF_NAME#v}"
+          # Update changelog version to match tag
+          sed -i "1s/([^)]*)/($VERSION-1)/" debian/changelog
+          dpkg-buildpackage -us -uc -b
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-package
+          path: ../cockpit-wifi_*.deb
+          retention-days: 7
+
+  build-rpm:
+    name: Build .rpm (Fedora/RHEL)
+    runs-on: ubuntu-latest
+    container: fedora:latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          dnf install -y rpmdevtools nodejs npm make git
+
+      - name: Setup rpmbuild tree
+        run: rpmdev-setuptree
+
+      - name: Build source tarball
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i "s/^Version:.*/Version:        $VERSION/" packaging/rpm/cockpit-wifi.spec
+          # Build the dist first so it ends up in the tarball
+          npm ci
+          make pkg/lib
+          NODE_ENV=production node build.js
+          # Package dist as tarball
+          tar czf ~/rpmbuild/SOURCES/cockpit-wifi-${VERSION}.tar.gz \
+            --transform "s,^dist,cockpit-wifi-${VERSION}," \
+            dist/ LICENSE README.md
+
+      - name: Build .rpm package
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          rpmbuild -bb packaging/rpm/cockpit-wifi.spec
+
+      - name: Upload .rpm artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpm-package
+          path: ~/rpmbuild/RPMS/noarch/cockpit-wifi-*.rpm
+          retention-days: 7
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-deb, build-rpm]
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download .deb artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deb-package
+          path: dist-packages/
+
+      - name: Download .rpm artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: rpm-package
+          path: dist-packages/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist-packages/*
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
