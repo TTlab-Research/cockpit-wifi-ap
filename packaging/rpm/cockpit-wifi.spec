@@ -3,12 +3,11 @@ Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Cockpit plugin for complete WiFi management
 License:        MIT
-URL:            https://github.com/TTlab-official/cockpit-wifi
+URL:            https://github.com/TTlab-Research/cockpit-wifi
 Source0:        %{name}-%{version}.tar.gz
 
 BuildArch:      noarch
-BuildRequires:  nodejs >= 18
-BuildRequires:  npm
+# No BuildRequires — package ships pre-built assets from CI
 
 Requires:       cockpit >= 270
 Requires:       NetworkManager
@@ -25,26 +24,24 @@ Features:
 - Scan and connect to WiFi networks
 - Manage saved WiFi connections
 - Create and manage WiFi Access Points (hotspot)
+- Three AP modes: router, isolated network, bridge to ethernet
 - DHCP server configuration via dnsmasq
-- Internet sharing via NAT/masquerading
 - Dark theme support via PatternFly 6
-- Real-time dashboard with connection status
 
 %prep
 %autosetup
 
 %build
-npm ci
-NODE_ENV=production ./build.js
+# Nothing to build — pre-built assets are shipped in the tarball
 
 %install
 install -d %{buildroot}%{_datadir}/cockpit/wifi
-cp -r dist/* %{buildroot}%{_datadir}/cockpit/wifi/
+cp -r cockpit/* %{buildroot}%{_datadir}/cockpit/wifi/
 install -d %{buildroot}%{_sysconfdir}/cockpit-wifi
 
 %files
 %license LICENSE
-%doc README.md
+%doc README.md CHANGELOG.md
 %{_datadir}/cockpit/wifi/
 %dir %{_sysconfdir}/cockpit-wifi
 

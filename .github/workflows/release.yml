@@ -108,10 +108,15 @@ jobs:
           npm ci
           make pkg/lib
           NODE_ENV=production node build.js
-          # Tarball dir must match %{name}-%{version} = cockpit-wifi-BASE_VERSION
+          # Build tarball: cockpit-wifi-BASE_VERSION/
+          #   cockpit/  <- pre-built plugin files (what goes in /usr/share/cockpit/wifi/)
+          #   LICENSE, README.md, CHANGELOG.md
+          SRCDIR="cockpit-wifi-${BASE_VERSION}"
+          mkdir -p "/tmp/${SRCDIR}/cockpit"
+          cp -r dist/* "/tmp/${SRCDIR}/cockpit/"
+          cp LICENSE README.md CHANGELOG.md "/tmp/${SRCDIR}/"
           tar czf "$HOME/rpmbuild/SOURCES/cockpit-wifi-${BASE_VERSION}.tar.gz" \
-            --transform "s,^dist,cockpit-wifi-${BASE_VERSION}," \
-            dist/ LICENSE README.md CHANGELOG.md
+            -C /tmp "${SRCDIR}/"
           sed -i "s/^Source0:.*/Source0:        %{name}-${BASE_VERSION}.tar.gz/" packaging/rpm/cockpit-wifi.spec
           rpmbuild -bb packaging/rpm/cockpit-wifi.spec
           # Copy output to workspace for upload
