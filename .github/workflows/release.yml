@@ -168,14 +168,7 @@ jobs:
       - name: Delete existing release for this tag (if any)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          release_id=$(gh api repos/${{ github.repository }}/releases/tags/${{ github.ref_name }} --jq '.id' 2>/dev/null || true)
-          if [ -n "$release_id" ]; then
-            echo "Deleting existing release $release_id for ${{ github.ref_name }}"
-            gh api -X DELETE repos/${{ github.repository }}/releases/$release_id
-          else
-            echo "No existing release found for ${{ github.ref_name }}"
-          fi
+        run: gh release delete ${{ github.ref_name }} --yes 2>/dev/null || true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
