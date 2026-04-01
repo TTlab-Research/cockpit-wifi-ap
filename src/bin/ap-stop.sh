@@ -46,11 +46,11 @@ while iptables -S FORWARD 2>/dev/null | grep -q "cockpit-wifi-ap"; do
     [ -n "$RULE_NUM" ] && iptables -D FORWARD "$RULE_NUM" || break
 done
 
-# Mark disabled in config and disable systemd service
-# Skip if called as ExecStop during system shutdown (preserve enabled state for next boot)
+# Mark disabled in config and disable systemd service.
+# $MAINPID is set by systemd only when running as ExecStop — skip disable
+# in that case so the service stays enabled across reboots.
 CONFIG_FILE="/etc/cockpit-wifi-ap/ap.conf"
-SYSTEM_STATE=$(systemctl is-system-running 2>/dev/null || echo "unknown")
-if echo "$SYSTEM_STATE" | grep -qvE 'stopping|offline|maintenance'; then
+if [ -z "$MAINPID" ]; then
     if [ -f "$CONFIG_FILE" ]; then
         python3 -c "
 import json

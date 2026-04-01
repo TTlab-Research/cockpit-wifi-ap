@@ -1,3 +1,11 @@
+cockpit-wifi-ap (0.1.2~alpha.14-1) unstable; urgency=high
+
+  * Fix: ap-stop.sh uses $MAINPID (set by systemd in ExecStop) to reliably
+    detect shutdown vs UI-initiated stop; replaces unreliable
+    is-system-running check
+
+ -- TTlab <info@ttlab.it>  Wed, 01 Apr 2026 23:45:00 +0200
+
 cockpit-wifi-ap (0.1.2~alpha.13-1) unstable; urgency=high
 
   * Fix: ap-stop.sh no longer disables the systemd service during system
