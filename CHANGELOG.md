@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2-alpha.11] - 2026-04-01
+
+### Added
+- Add country code selector and auto channel option
+
 ## [0.1.2-alpha.10] - 2026-04-01
 
 ### Fixed
