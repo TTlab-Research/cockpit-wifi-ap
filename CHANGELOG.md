@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2-alpha.7] - 2026-04-01
+
+### Fixed
+- Repair dhcp, nftables auto-management and package builds
+
 ## [0.1.2-alpha.6] - 2026-04-01
 
 ### Fixed
