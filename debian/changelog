@@ -1,3 +1,12 @@
+cockpit-wifi-ap (0.1.2~alpha.13-1) unstable; urgency=high
+
+  * Fix: ap-stop.sh no longer disables the systemd service during system
+    shutdown (ExecStop path); service stays enabled across reboots
+  * Fix: ap-start.sh bounces NM connection after initial activation to
+    ensure WiFi beaconing on self-managed PHY (iwlwifi) at cold boot
+
+ -- TTlab <info@ttlab.it>  Wed, 01 Apr 2026 23:15:00 +0200
+
 cockpit-wifi-ap (0.1.2-1) unstable; urgency=low
 
   * Fix config path: /etc/cockpit-wifi-ap/ap.conf (was /etc/cockpit-wifi)

@@ -47,9 +47,12 @@ while iptables -S FORWARD 2>/dev/null | grep -q "cockpit-wifi-ap"; do
 done
 
 # Mark disabled in config and disable systemd service
+# Skip if called as ExecStop during system shutdown (preserve enabled state for next boot)
 CONFIG_FILE="/etc/cockpit-wifi-ap/ap.conf"
-if [ -f "$CONFIG_FILE" ]; then
-    python3 -c "
+SYSTEM_STATE=$(systemctl is-system-running 2>/dev/null || echo "unknown")
+if echo "$SYSTEM_STATE" | grep -qvE 'stopping|offline|maintenance'; then
+    if [ -f "$CONFIG_FILE" ]; then
+        python3 -c "
 import json
 with open('${CONFIG_FILE}') as f:
     c = json.load(f)
@@ -57,7 +60,8 @@ c['enabled'] = False
 with open('${CONFIG_FILE}', 'w') as f:
     json.dump(c, f, indent=2)
 "
+    fi
+    systemctl disable cockpit-wifi-ap.service 2>/dev/null || true
 fi
-systemctl disable cockpit-wifi-ap.service 2>/dev/null || true
 
 echo '{"success": true}'

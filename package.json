@@ -1,6 +1,6 @@
 {
   "name": "cockpit-wifi-ap",
-  "version": "0.1.2",
+  "version": "0.1.2-alpha.13",
   "description": "Cockpit plugin for WiFi Access Point management",
   "type": "module",
   "main": "index.js",

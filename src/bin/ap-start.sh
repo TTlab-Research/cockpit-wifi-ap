@@ -267,6 +267,21 @@ server=${UPSTREAM_DNS}"
         ;;
 esac
 
+# Workaround per PHY self-managed (iwlwifi): il dominio regolatorio si inizializza
+# in modo asincrono al boot e la prima attivazione NM parte prima che la scheda
+# sia pronta → beacon non trasmessi. Un bounce garantisce attivazione stabile.
+if [ "$AP_MODE" != "bridge" ]; then
+    sleep 1
+    nmcli connection down cockpit-wifi-ap 2>/dev/null || true
+    sleep 1
+    nmcli connection up cockpit-wifi-ap
+    for i in $(seq 1 10); do
+        ip link show "$AP_IFACE" | grep -q "UP" && break
+        sleep 1
+    done
+    systemctl restart dnsmasq.service 2>/dev/null || true
+fi
+
 # Mark enabled in config and enable systemd service for autostart on boot
 python3 -c "
 import json
