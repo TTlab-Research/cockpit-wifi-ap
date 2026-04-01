@@ -59,6 +59,7 @@ declare module 'cockpit' {
 
     function format_bytes(bytes: number): string;
     function gettext(message: string): string;
+    function locale(po: Record<string, unknown>): void;
 }
 
 declare module 'cockpit-dark-theme' {

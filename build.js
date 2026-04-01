@@ -2,6 +2,7 @@
 
 import esbuild from 'esbuild';
 import { sassPlugin } from 'esbuild-sass-plugin';
+import gettextParser from 'gettext-parser';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,6 +10,39 @@ const production = process.env.NODE_ENV === 'production';
 const watchMode = !!process.env.ESBUILD_WATCH;
 
 const nodePaths = ['pkg/lib'];
+
+// Compile po files and emit dist/po/<lang>.js
+function poPlugin() {
+    return {
+        name: 'po-compile',
+        setup(build) {
+            build.onEnd(() => {
+                const poSrc = 'po';
+                const poDst = path.join('dist', 'po');
+                if (!fs.existsSync(poSrc)) return;
+                if (!fs.existsSync(poDst)) {
+                    fs.mkdirSync(poDst, { recursive: true });
+                }
+                for (const f of fs.readdirSync(poSrc)) {
+                    if (!f.endsWith('.po')) continue;
+                    const lang = f.slice(0, -3);
+                    const raw = fs.readFileSync(path.join(poSrc, f));
+                    const parsed = gettextParser.po.parse(raw);
+                    const translations = parsed.translations[''] || {};
+                    const pluralForms = parsed.headers['Plural-Forms'] || parsed.headers['plural-forms'] || '';
+                    const poData = { 'plural-forms': pluralForms };
+                    for (const [msgid, entry] of Object.entries(translations)) {
+                        if (!msgid) continue;
+                        poData[msgid] = entry.msgstr;
+                    }
+                    const jsonStr = JSON.stringify(poData);
+                    const outContent = `(function() {\nif (typeof cockpit !== "undefined") cockpit.locale(${jsonStr});\n})();\n`;
+                    fs.writeFileSync(path.join(poDst, `${lang}.js`), outContent);
+                }
+            });
+        },
+    };
+}
 
 // Copy static files to dist
 function copyPlugin() {
@@ -34,6 +68,15 @@ function copyPlugin() {
                     for (const f of fs.readdirSync(binSrc)) {
                         fs.copyFileSync(path.join(binSrc, f), path.join(binDst, f));
                         fs.chmodSync(path.join(binDst, f), 0o755);
+                    }
+                }
+                // Copy compiled po files
+                const poDst = path.join(distDir, 'po');
+                if (fs.existsSync(poDst)) {
+                    for (const f of fs.readdirSync(poDst)) {
+                        if (f.endsWith('.js')) {
+                            fs.copyFileSync(path.join(poDst, f), path.join(poDst, f));
+                        }
                     }
                 }
             });
@@ -70,6 +113,7 @@ const context = await esbuild.context({
     target: ['es2020'],
     plugins: [
         sassPlugin({ loadPaths: [...nodePaths, 'node_modules'] }),
+        poPlugin(),
         copyPlugin(),
         notifyEndPlugin(),
     ],

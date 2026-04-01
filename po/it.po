@@ -1,0 +1,135 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "AP Status"
+msgstr "Stato Access Point"
+
+msgid "Disable"
+msgstr "Disattiva"
+
+msgid "Enable"
+msgstr "Attiva"
+
+msgid "Access Point not active"
+msgstr "Access Point non attivo"
+
+msgid "Mode"
+msgstr "Modalità"
+
+msgid "Interface"
+msgstr "Interfaccia"
+
+msgid "Connected clients"
+msgstr "Client connessi"
+
+msgid "Active"
+msgstr "Attivo"
+
+msgid "Not active"
+msgstr "Non attivo"
+
+msgid "Router"
+msgstr "Router"
+
+msgid "Isolated network"
+msgstr "Rete isolata"
+
+msgid "Bridge"
+msgstr "Bridge"
+
+msgid "Configuration"
+msgstr "Configurazione"
+
+msgid "WiFi network name (1-32 characters)"
+msgstr "Nome della rete WiFi (1-32 caratteri)"
+
+msgid "WPA2/WPA3 password (minimum 8 characters)"
+msgstr "Password WPA2/WPA3 (minimo 8 caratteri)"
+
+msgid "WiFi Interface"
+msgstr "Interfaccia WiFi"
+
+msgid "Band"
+msgstr "Banda"
+
+msgid "Automatic"
+msgstr "Automatica"
+
+msgid "Channel"
+msgstr "Canale"
+
+msgid "Network mode"
+msgstr "Modalità rete"
+
+msgid "Router (DHCP + NAT + Gateway)"
+msgstr "Router (DHCP + NAT + Gateway)"
+
+msgid "Isolated network (DHCP IP only)"
+msgstr "Rete isolata (DHCP solo IP)"
+
+msgid "Bridge (external DHCP)"
+msgstr "Bridge (DHCP esterno)"
+
+msgid "Full DHCP with gateway, DNS and NAT. Clients can access the internet through this device."
+msgstr "DHCP completo con gateway, DNS e NAT. I client possono navigare in internet tramite questo dispositivo."
+
+msgid "DHCP assigns IP only. Clients can access device services (e.g. Cockpit) but cannot browse the internet. Does not interfere with other client connections."
+msgstr "DHCP assegna solo un IP. I client accedono ai servizi del dispositivo (es. Cockpit) ma non internet. Non interferisce con altre connessioni del client."
+
+msgid "No local DHCP. The WiFi interface is bridged with ethernet. An external DHCP server on the LAN manages address assignment."
+msgstr "Nessun DHCP locale. L'interfaccia WiFi viene collegata in bridge con ethernet. Un server DHCP esterno sulla LAN gestisce l'assegnazione degli indirizzi."
+
+msgid "Bridge interface"
+msgstr "Interfaccia bridge"
+
+msgid "Ethernet interface to bridge with WiFi AP"
+msgstr "Interfaccia ethernet da collegare in bridge con il WiFi AP"
+
+msgid "No ethernet interface available"
+msgstr "Nessuna interfaccia ethernet disponibile"
+
+msgid "IP Address"
+msgstr "Indirizzo IP"
+
+msgid "Bridge IP"
+msgstr "IP del bridge"
+
+msgid "IP assigned to the bridge interface of the device"
+msgstr "IP assegnato all'interfaccia bridge del dispositivo"
+
+msgid "DHCP start"
+msgstr "DHCP inizio"
+
+msgid "DHCP end"
+msgstr "DHCP fine"
+
+msgid "In bridge mode DHCP is managed by the external server on the LAN."
+msgstr "In modalità bridge il DHCP è gestito dal server esterno sulla LAN."
+
+msgid "Save configuration"
+msgstr "Salva configurazione"
+
+msgid "No AP device available"
+msgstr "Nessun dispositivo AP disponibile"
+
+msgid "SSID required and password minimum 8 characters"
+msgstr "SSID obbligatorio e password minimo 8 caratteri"
+
+msgid "Select an ethernet interface for the bridge"
+msgstr "Seleziona un'interfaccia ethernet per il bridge"
+
+msgid "Configure SSID and password before enabling"
+msgstr "Configura SSID e password prima di avviare"
+
+msgid "Access Point disabled"
+msgstr "Access Point disattivato"
+
+msgid "Access Point started"
+msgstr "Access Point avviato"
+
+msgid "Configuration saved"
+msgstr "Configurazione salvata"
