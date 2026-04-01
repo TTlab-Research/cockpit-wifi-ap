@@ -6,12 +6,42 @@ on:
       - 'v*'
 
 jobs:
-  build-deb:
-    name: Build .deb (Debian/Ubuntu)
+  changelog:
+    name: Generate Changelog
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # git-cliff needs full history
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@v2
+        with:
+          tool: git-cliff
+
+      - name: Generate CHANGELOG.md
+        run: git-cliff --output CHANGELOG.md
+
+      - name: Commit updated CHANGELOG.md
+        run: |
+          git config user.name "TTlab"
+          git config user.email "info@ttlab.it"
+          git add CHANGELOG.md
+          git diff --staged --quiet || git commit -m "chore(release): update CHANGELOG.md for ${GITHUB_REF_NAME}"
+          git push origin HEAD:main
+
+  build-deb:
+    name: Build .deb (Debian/Ubuntu)
+    runs-on: ubuntu-latest
+    needs: changelog
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main  # pick up the changelog commit
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,9 +56,7 @@ jobs:
 
       - name: Build .deb package
         run: |
-          # Extract version from tag (strip leading 'v')
           VERSION="${GITHUB_REF_NAME#v}"
-          # Update changelog version to match tag
           sed -i "1s/([^)]*)/($VERSION-1)/" debian/changelog
           dpkg-buildpackage -us -uc -b
 
@@ -42,14 +70,16 @@ jobs:
   build-rpm:
     name: Build .rpm (Fedora/RHEL)
     runs-on: ubuntu-latest
+    needs: changelog
     container: fedora:latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Install build dependencies
-        run: |
-          dnf install -y rpmdevtools nodejs npm make git
+        run: dnf install -y rpmdevtools nodejs npm make git
 
       - name: Setup rpmbuild tree
         run: rpmdev-setuptree
@@ -58,14 +88,12 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           sed -i "s/^Version:.*/Version:        $VERSION/" packaging/rpm/cockpit-wifi.spec
-          # Build the dist first so it ends up in the tarball
           npm ci
           make pkg/lib
           NODE_ENV=production node build.js
-          # Package dist as tarball
           tar czf ~/rpmbuild/SOURCES/cockpit-wifi-${VERSION}.tar.gz \
             --transform "s,^dist,cockpit-wifi-${VERSION}," \
-            dist/ LICENSE README.md
+            dist/ LICENSE README.md CHANGELOG.md
 
       - name: Build .rpm package
         run: |
@@ -88,6 +116,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@v2
+        with:
+          tool: git-cliff
+
+      - name: Generate release notes (current tag only)
+        run: git-cliff --current --strip header > RELEASE_NOTES.md
 
       - name: Download .deb artifact
         uses: actions/download-artifact@v4
@@ -101,10 +139,10 @@ jobs:
           name: rpm-package
           path: dist-packages/
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist-packages/*
-          generate_release_notes: true
+          body_path: RELEASE_NOTES.md
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
