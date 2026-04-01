@@ -49,7 +49,7 @@ def ap_status():
     status["interface"] = ap_device
 
     # Read mode from config file
-    config_file = "/etc/cockpit-wifi/ap.conf"
+    config_file = "/etc/cockpit-wifi-ap/ap.conf"
     if os.path.exists(config_file):
         try:
             with open(config_file) as f:

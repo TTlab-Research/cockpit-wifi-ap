@@ -2,7 +2,7 @@
 # Start WiFi Access Point using NetworkManager + dnsmasq
 set -euo pipefail
 
-CONFIG_FILE="/etc/cockpit-wifi/ap.conf"
+CONFIG_FILE="/etc/cockpit-wifi-ap/ap.conf"
 
 if [ ! -f "$CONFIG_FILE" ]; then
     echo '{"error": "No AP configuration found. Save configuration first."}' >&2

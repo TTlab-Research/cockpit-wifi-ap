@@ -28,6 +28,15 @@ import { PlayIcon, StopIcon } from '@patternfly/react-icons';
 import { apGetConfig, apSetConfig, apStart, apStop, apStatus, wifiDevices, netInterfaces } from '../../lib/wifi-api';
 import type { APConfig, APMode, APStatus, WifiDevice, NetInterface } from '../../lib/types';
 
+function extractError (err: unknown): string {
+    const msg = err instanceof Error ? err.message : String(err);
+    try {
+        const parsed = JSON.parse(msg);
+        if (parsed.error) return parsed.error;
+    } catch { /* not JSON, use as-is */ }
+    return msg;
+}
+
 const DEFAULT_CONFIG: APConfig = {
     ssid: '',
     passphrase: '',
@@ -89,7 +98,7 @@ export const AccessPointPage: React.FC = () => {
                 setConfig(prev => ({ ...prev, bridgeInterface: eths[0].device }));
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : String(err));
+            setError(extractError(err));
         } finally {
             setLoading(false);
         }
@@ -118,7 +127,7 @@ export const AccessPointPage: React.FC = () => {
             await apSetConfig(config);
             setSuccess('Configurazione salvata');
         } catch (err) {
-            setError(err instanceof Error ? err.message : String(err));
+            setError(extractError(err));
         } finally {
             setSaving(false);
         }
@@ -144,7 +153,7 @@ export const AccessPointPage: React.FC = () => {
             const newStatus = await apStatus().catch(() => null);
             setStatus(newStatus);
         } catch (err) {
-            setError(err instanceof Error ? err.message : String(err));
+            setError(extractError(err));
         } finally {
             setToggling(false);
         }
