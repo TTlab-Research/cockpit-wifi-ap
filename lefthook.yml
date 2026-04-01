@@ -1,0 +1,17 @@
+pre-commit:
+  parallel: true
+  commands:
+    eslint:
+      glob: "src/**/*.{ts,tsx}"
+      run: npx eslint --max-warnings 0 {staged_files}
+      stage_fixed: true
+
+    stylelint:
+      glob: "src/**/*.{css,scss}"
+      run: npx stylelint {staged_files}
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no -- commitlint --edit {1}

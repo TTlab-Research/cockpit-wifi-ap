@@ -2,12 +2,14 @@
 node = "22"
 python = "3.12"
 usage = "latest"
+lefthook = "latest"
 
 [tasks.setup]
-description = "Install all dependencies and download Cockpit libs"
+description = "Install all dependencies, Cockpit libs and git hooks"
 run = """
 npm ci
 make pkg/lib
+lefthook install
 """
 
 [tasks.build]
