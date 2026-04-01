@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2-alpha.3] - 2026-04-01
+
+### Fixed
+- Bring up ap interface before starting dnsmasq, use bind-dynamic
+
 ## [0.1.2-alpha.2] - 2026-04-01
 
 ### Fixed
