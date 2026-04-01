@@ -16,6 +16,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Remove lefthook from ci (not needed, linters run explicitly)
 - Add nodejs/npm to deb build deps, handle pre-release version in rpm spec
 - Remove debian/compat duplicate, fix rpm tarball dir for pre-release versions
+- Ship pre-built assets in rpm tarball, skip build phase in spec
 
 ### Maintenance
 - Switch license to MIT, add TTlab author metadata
