@@ -13,14 +13,14 @@ import {
     Spinner,
     EmptyState,
     EmptyStateBody,
-    Button,
+    Button
 } from '@patternfly/react-core';
 import {
     WifiIcon,
     ServerIcon,
     SyncAltIcon,
     ConnectedIcon,
-    DisconnectedIcon,
+    DisconnectedIcon
 } from '@patternfly/react-icons';
 
 import { wifiStatus, apStatus, wifiDevices } from '../../lib/wifi-api';
@@ -41,7 +41,7 @@ export const DashboardPage: React.FC = () => {
             const [ws, as, devs] = await Promise.all([
                 wifiStatus(),
                 apStatus().catch(() => null),
-                wifiDevices(),
+                wifiDevices()
             ]);
             setClientStatus(ws);
             setApState(as);
@@ -62,7 +62,7 @@ export const DashboardPage: React.FC = () => {
     if (loading && !clientStatus && !apState) {
         return (
             <EmptyState>
-                <Spinner size="xl" />
+                <Spinner size='xl' />
                 <EmptyStateBody>Caricamento stato WiFi...</EmptyStateBody>
             </EmptyState>
         );
@@ -70,9 +70,9 @@ export const DashboardPage: React.FC = () => {
 
     if (error) {
         return (
-            <EmptyState variant="sm">
+            <EmptyState variant='sm'>
                 <EmptyStateBody>{error}</EmptyStateBody>
-                <Button variant="link" onClick={refresh}>Riprova</Button>
+                <Button variant='link' onClick={refresh}>Riprova</Button>
             </EmptyState>
         );
     }
@@ -92,7 +92,7 @@ export const DashboardPage: React.FC = () => {
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>Stato</DescriptionListTerm>
                                         <DescriptionListDescription>
-                                            <Label color="green" icon={<ConnectedIcon />}>
+                                            <Label color='green' icon={<ConnectedIcon />}>
                                                 Connesso
                                             </Label>
                                         </DescriptionListDescription>
@@ -131,11 +131,10 @@ export const DashboardPage: React.FC = () => {
                                 </DescriptionList>
                             )
                             : (
-                                <Label color="grey" icon={<DisconnectedIcon />}>
+                                <Label color='grey' icon={<DisconnectedIcon />}>
                                     Non connesso
                                 </Label>
-                            )
-                        }
+                            )}
                     </CardBody>
                 </Card>
             </GridItem>
@@ -153,7 +152,7 @@ export const DashboardPage: React.FC = () => {
                                     <DescriptionListGroup>
                                         <DescriptionListTerm>Stato</DescriptionListTerm>
                                         <DescriptionListDescription>
-                                            <Label color="green" icon={<ConnectedIcon />}>
+                                            <Label color='green' icon={<ConnectedIcon />}>
                                                 Attivo
                                             </Label>
                                         </DescriptionListDescription>
@@ -201,11 +200,10 @@ export const DashboardPage: React.FC = () => {
                                 </DescriptionList>
                             )
                             : (
-                                <Label color="grey" icon={<DisconnectedIcon />}>
+                                <Label color='grey' icon={<DisconnectedIcon />}>
                                     Non attivo
                                 </Label>
-                            )
-                        }
+                            )}
                     </CardBody>
                 </Card>
             </GridItem>
@@ -230,7 +228,7 @@ export const DashboardPage: React.FC = () => {
                                                 {' '}
                                                 {dev.connection && `(${dev.connection})`}
                                                 {dev.supportAP && (
-                                                    <Label color="blue" isCompact>
+                                                    <Label color='blue' isCompact>
                                                         AP supportato
                                                     </Label>
                                                 )}
@@ -239,8 +237,7 @@ export const DashboardPage: React.FC = () => {
                                     ))}
                                 </DescriptionList>
                             )
-                            : 'Nessun dispositivo wireless rilevato'
-                        }
+                            : 'Nessun dispositivo wireless rilevato'}
                     </CardBody>
                 </Card>
             </GridItem>

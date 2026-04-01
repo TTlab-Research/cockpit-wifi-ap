@@ -15,7 +15,7 @@ import {
     ActionGroup,
     Alert,
     Spinner,
-    Label,
+    Label
 } from '@patternfly/react-core';
 import { SyncAltIcon, TrashIcon, PluggedIcon } from '@patternfly/react-icons';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
@@ -110,8 +110,8 @@ export const WifiClientPage: React.FC = () => {
 
     return (
         <>
-            {error && <Alert variant="danger" title={error} isInline />}
-            {success && <Alert variant="success" title={success} isInline timeout={5000} onTimeout={() => setSuccess(null)} />}
+            {error && <Alert variant='danger' title={error} isInline />}
+            {success && <Alert variant='success' title={success} isInline timeout={5000} onTimeout={() => setSuccess(null)} />}
 
             {/* Saved Connections */}
             <Card>
@@ -119,7 +119,7 @@ export const WifiClientPage: React.FC = () => {
                 <CardBody>
                     {connections.length > 0
                         ? (
-                            <Table aria-label="Connessioni WiFi salvate" variant="compact">
+                            <Table aria-label='Connessioni WiFi salvate' variant='compact'>
                                 <Thead>
                                     <Tr>
                                         <Th>Nome</Th>
@@ -142,8 +142,8 @@ export const WifiClientPage: React.FC = () => {
                                                 {conn.active
                                                     ? (
                                                         <Button
-                                                            variant="secondary"
-                                                            size="sm"
+                                                            variant='secondary'
+                                                            size='sm'
                                                             onClick={() => handleDisconnect(conn.id)}
                                                         >
                                                             Disconnetti
@@ -151,23 +151,21 @@ export const WifiClientPage: React.FC = () => {
                                                     )
                                                     : (
                                                         <Button
-                                                            variant="danger"
-                                                            size="sm"
+                                                            variant='danger'
+                                                            size='sm'
                                                             icon={<TrashIcon />}
                                                             onClick={() => handleDelete(conn.id)}
                                                         >
                                                             Elimina
                                                         </Button>
-                                                    )
-                                                }
+                                                    )}
                                             </Td>
                                         </Tr>
                                     ))}
                                 </Tbody>
                             </Table>
                         )
-                        : 'Nessuna connessione WiFi salvata'
-                    }
+                        : 'Nessuna connessione WiFi salvata'}
                 </CardBody>
             </Card>
 
@@ -179,7 +177,7 @@ export const WifiClientPage: React.FC = () => {
                             <ToolbarItem>Reti disponibili</ToolbarItem>
                             <ToolbarItem align={{ default: 'alignEnd' }}>
                                 <Button
-                                    variant="secondary"
+                                    variant='secondary'
                                     icon={<SyncAltIcon />}
                                     onClick={handleScan}
                                     isLoading={scanning}
@@ -193,10 +191,10 @@ export const WifiClientPage: React.FC = () => {
                 </CardTitle>
                 <CardBody>
                     {scanning && networks.length === 0
-                        ? <Spinner size="lg" />
+                        ? <Spinner size='lg' />
                         : networks.length > 0
                             ? (
-                                <Table aria-label="Reti WiFi disponibili" variant="compact">
+                                <Table aria-label='Reti WiFi disponibili' variant='compact'>
                                     <Thead>
                                         <Tr>
                                             <Th>SSID</Th>
@@ -222,8 +220,8 @@ export const WifiClientPage: React.FC = () => {
                                                 <Td>
                                                     {!net.inUse && (
                                                         <Button
-                                                            variant="primary"
-                                                            size="sm"
+                                                            variant='primary'
+                                                            size='sm'
                                                             onClick={() => openConnectModal(net.ssid)}
                                                         >
                                                             Connetti
@@ -235,8 +233,7 @@ export const WifiClientPage: React.FC = () => {
                                     </Tbody>
                                 </Table>
                             )
-                            : 'Nessuna rete trovata. Prova a scansionare.'
-                    }
+                            : 'Nessuna rete trovata. Prova a scansionare.'}
                 </CardBody>
             </Card>
 
@@ -248,13 +245,13 @@ export const WifiClientPage: React.FC = () => {
                 onClose={() => setConnectModal(false)}
             >
                 <Form>
-                    <FormGroup label="SSID" fieldId="ssid">
-                        <TextInput id="ssid" value={selectedSSID} isDisabled />
+                    <FormGroup label='SSID' fieldId='ssid'>
+                        <TextInput id='ssid' value={selectedSSID} isDisabled />
                     </FormGroup>
-                    <FormGroup label="Password" fieldId="password" helperText="Minimo 8 caratteri">
+                    <FormGroup label='Password' fieldId='password' helperText='Minimo 8 caratteri'>
                         <TextInput
-                            id="password"
-                            type="password"
+                            id='password'
+                            type='password'
                             value={password}
                             onChange={(_event, val) => setPassword(val)}
                             validated={password.length > 0 && password.length < 8 ? 'error' : 'default'}
@@ -262,14 +259,14 @@ export const WifiClientPage: React.FC = () => {
                     </FormGroup>
                     <ActionGroup>
                         <Button
-                            variant="primary"
+                            variant='primary'
                             onClick={handleConnect}
                             isLoading={connecting}
                             isDisabled={connecting || password.length < 8}
                         >
                             Connetti
                         </Button>
-                        <Button variant="link" onClick={() => setConnectModal(false)}>
+                        <Button variant='link' onClick={() => setConnectModal(false)}>
                             Annulla
                         </Button>
                     </ActionGroup>

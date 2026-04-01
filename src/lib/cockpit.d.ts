@@ -33,19 +33,19 @@ declare module 'cockpit' {
         };
     }
 
+    interface DbusProxy {
+        wait(): Promise<DbusProxy>;
+        call(method: string, args?: unknown[]): Promise<unknown[]>;
+        data: Record<string, unknown>;
+        [key: string]: unknown;
+    }
+
     interface DbusClient {
         proxy(iface?: string, path?: string): DbusProxy;
         call(path: string, iface: string, method: string, args?: unknown[]): Promise<unknown[]>;
         subscribe(match: Record<string, string>, callback: (path: string, iface: string, signal: string, args: unknown[]) => void): { remove(): void };
         close(): void;
         wait(): Promise<void>;
-    }
-
-    interface DbusProxy {
-        wait(): Promise<DbusProxy>;
-        call(method: string, args?: unknown[]): Promise<unknown[]>;
-        data: Record<string, unknown>;
-        [key: string]: unknown;
     }
 
     interface DbusOptions {

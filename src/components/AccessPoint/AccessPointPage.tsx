@@ -22,7 +22,7 @@ import {
     DescriptionListDescription,
     Radio,
     HelperText,
-    HelperTextItem,
+    HelperTextItem
 } from '@patternfly/react-core';
 import { PlayIcon, StopIcon } from '@patternfly/react-icons';
 
@@ -40,13 +40,13 @@ const DEFAULT_CONFIG: APConfig = {
     bridgeInterface: '',
     dhcpRangeStart: '192.168.4.20',
     dhcpRangeEnd: '192.168.4.252',
-    enabled: false,
+    enabled: false
 };
 
 const MODE_DESCRIPTIONS: Record<APMode, string> = {
     router: 'DHCP completo con gateway, DNS e NAT. I client possono navigare in internet tramite questo dispositivo.',
     isolated: 'DHCP assegna solo un IP. I client possono accedere ai servizi del dispositivo (es. Cockpit) ma non navigano in internet. Non interferisce con altre connessioni del client.',
-    bridge: 'Nessun DHCP locale. L\'interfaccia WiFi viene collegata in bridge con un\'interfaccia ethernet. Un server DHCP esterno sulla LAN gestisce l\'assegnazione degli indirizzi.',
+    bridge: 'Nessun DHCP locale. L\'interfaccia WiFi viene collegata in bridge con un\'interfaccia ethernet. Un server DHCP esterno sulla LAN gestisce l\'assegnazione degli indirizzi.'
 };
 
 export const AccessPointPage: React.FC = () => {
@@ -67,7 +67,7 @@ export const AccessPointPage: React.FC = () => {
                 apGetConfig(),
                 apStatus().catch(() => null),
                 wifiDevices(),
-                netInterfaces(),
+                netInterfaces()
             ]);
             if (savedConfig) setConfig(savedConfig);
             setStatus(currentStatus);
@@ -143,15 +143,15 @@ export const AccessPointPage: React.FC = () => {
     };
 
     if (loading) {
-        return <Spinner size="xl" />;
+        return <Spinner size='xl' />;
     }
 
     const isActive = status?.active ?? false;
 
     return (
         <>
-            {error && <Alert variant="danger" title={error} isInline />}
-            {success && <Alert variant="success" title={success} isInline timeout={5000} onTimeout={() => setSuccess(null)} />}
+            {error && <Alert variant='danger' title={error} isInline />}
+            {success && <Alert variant='success' title={success} isInline timeout={5000} onTimeout={() => setSuccess(null)} />}
 
             {/* AP Status & Toggle */}
             <Card>
@@ -206,9 +206,8 @@ export const AccessPointPage: React.FC = () => {
                             </DescriptionList>
                         )
                         : (
-                            <Label color="grey">Access Point non attivo</Label>
-                        )
-                    }
+                            <Label color='grey'>Access Point non attivo</Label>
+                        )}
                 </CardBody>
             </Card>
 
@@ -217,9 +216,9 @@ export const AccessPointPage: React.FC = () => {
                 <CardTitle>Configurazione</CardTitle>
                 <CardBody>
                     <Form isHorizontal>
-                        <FormGroup label="SSID" fieldId="ap-ssid" isRequired helperText="Nome della rete WiFi (1-32 caratteri)">
+                        <FormGroup label='SSID' fieldId='ap-ssid' isRequired helperText='Nome della rete WiFi (1-32 caratteri)'>
                             <TextInput
-                                id="ap-ssid"
+                                id='ap-ssid'
                                 value={config.ssid}
                                 onChange={(_event, val) => updateConfig('ssid', val)}
                                 validated={config.ssid.length > 32 ? 'error' : 'default'}
@@ -227,10 +226,10 @@ export const AccessPointPage: React.FC = () => {
                             />
                         </FormGroup>
 
-                        <FormGroup label="Password" fieldId="ap-pass" isRequired helperText="Password WPA2/WPA3 (minimo 8 caratteri)">
+                        <FormGroup label='Password' fieldId='ap-pass' isRequired helperText='Password WPA2/WPA3 (minimo 8 caratteri)'>
                             <TextInput
-                                id="ap-pass"
-                                type="password"
+                                id='ap-pass'
+                                type='password'
                                 value={config.passphrase}
                                 onChange={(_event, val) => updateConfig('passphrase', val)}
                                 validated={config.passphrase.length > 0 && config.passphrase.length < 8 ? 'error' : 'default'}
@@ -238,9 +237,9 @@ export const AccessPointPage: React.FC = () => {
                             />
                         </FormGroup>
 
-                        <FormGroup label="Interfaccia WiFi" fieldId="ap-iface">
+                        <FormGroup label='Interfaccia WiFi' fieldId='ap-iface'>
                             <FormSelect
-                                id="ap-iface"
+                                id='ap-iface'
                                 value={config.interface}
                                 onChange={(_event, val) => updateConfig('interface', val)}
                                 isDisabled={isActive}
@@ -253,14 +252,13 @@ export const AccessPointPage: React.FC = () => {
                                             label={`${dev.device} (${dev.hwAddress})`}
                                         />
                                     ))
-                                    : <FormSelectOption value="" label="Nessun dispositivo AP disponibile" />
-                                }
+                                    : <FormSelectOption value='' label='Nessun dispositivo AP disponibile' />}
                             </FormSelect>
                         </FormGroup>
 
-                        <FormGroup label="Canale" fieldId="ap-channel">
+                        <FormGroup label='Canale' fieldId='ap-channel'>
                             <NumberInput
-                                id="ap-channel"
+                                id='ap-channel'
                                 value={config.channel}
                                 min={1}
                                 max={165}
@@ -274,47 +272,47 @@ export const AccessPointPage: React.FC = () => {
                             />
                         </FormGroup>
 
-                        <FormGroup label="Banda" fieldId="ap-band">
+                        <FormGroup label='Banda' fieldId='ap-band'>
                             <FormSelect
-                                id="ap-band"
+                                id='ap-band'
                                 value={config.band}
                                 onChange={(_event, val) => updateConfig('band', val)}
                                 isDisabled={isActive}
                             >
-                                <FormSelectOption value="auto" label="Automatica" />
-                                <FormSelectOption value="2.4GHz" label="2.4 GHz" />
-                                <FormSelectOption value="5GHz" label="5 GHz" />
+                                <FormSelectOption value='auto' label='Automatica' />
+                                <FormSelectOption value='2.4GHz' label='2.4 GHz' />
+                                <FormSelectOption value='5GHz' label='5 GHz' />
                             </FormSelect>
                         </FormGroup>
 
                         {/* AP Mode Selection */}
-                        <FormGroup label="Modalità rete" fieldId="ap-mode">
+                        <FormGroup label='Modalità rete' fieldId='ap-mode'>
                             <Radio
-                                id="ap-mode-router"
-                                name="ap-mode"
-                                label="Router (DHCP + NAT + Gateway)"
+                                id='ap-mode-router'
+                                name='ap-mode'
+                                label='Router (DHCP + NAT + Gateway)'
                                 isChecked={config.mode === 'router'}
                                 onChange={() => updateConfig('mode', 'router')}
                                 isDisabled={isActive}
                             />
                             <Radio
-                                id="ap-mode-isolated"
-                                name="ap-mode"
-                                label="Rete isolata (DHCP solo IP)"
+                                id='ap-mode-isolated'
+                                name='ap-mode'
+                                label='Rete isolata (DHCP solo IP)'
                                 isChecked={config.mode === 'isolated'}
                                 onChange={() => updateConfig('mode', 'isolated')}
                                 isDisabled={isActive}
                             />
                             <Radio
-                                id="ap-mode-bridge"
-                                name="ap-mode"
-                                label="Bridge (DHCP esterno)"
+                                id='ap-mode-bridge'
+                                name='ap-mode'
+                                label='Bridge (DHCP esterno)'
                                 isChecked={config.mode === 'bridge'}
                                 onChange={() => updateConfig('mode', 'bridge')}
                                 isDisabled={isActive}
                             />
                             <HelperText>
-                                <HelperTextItem variant="indeterminate">
+                                <HelperTextItem variant='indeterminate'>
                                     {MODE_DESCRIPTIONS[config.mode]}
                                 </HelperTextItem>
                             </HelperText>
@@ -322,9 +320,9 @@ export const AccessPointPage: React.FC = () => {
 
                         {/* Bridge interface - only in bridge mode */}
                         {config.mode === 'bridge' && (
-                            <FormGroup label="Interfaccia bridge" fieldId="ap-bridge-iface" helperText="Interfaccia ethernet da collegare in bridge con il WiFi AP">
+                            <FormGroup label='Interfaccia bridge' fieldId='ap-bridge-iface' helperText='Interfaccia ethernet da collegare in bridge con il WiFi AP'>
                                 <FormSelect
-                                    id="ap-bridge-iface"
+                                    id='ap-bridge-iface'
                                     value={config.bridgeInterface}
                                     onChange={(_event, val) => updateConfig('bridgeInterface', val)}
                                     isDisabled={isActive}
@@ -337,8 +335,7 @@ export const AccessPointPage: React.FC = () => {
                                                 label={`${iface.device} (${iface.state}${iface.connection ? ` - ${iface.connection}` : ''})`}
                                             />
                                         ))
-                                        : <FormSelectOption value="" label="Nessuna interfaccia ethernet disponibile" />
-                                    }
+                                        : <FormSelectOption value='' label='Nessuna interfaccia ethernet disponibile' />}
                                 </FormSelect>
                             </FormGroup>
                         )}
@@ -346,33 +343,33 @@ export const AccessPointPage: React.FC = () => {
                         {/* IP and DHCP config - not shown in bridge mode */}
                         {config.mode !== 'bridge' && (
                             <>
-                                <FormGroup label="Indirizzo IP" fieldId="ap-addr">
+                                <FormGroup label='Indirizzo IP' fieldId='ap-addr'>
                                     <TextInput
-                                        id="ap-addr"
+                                        id='ap-addr'
                                         value={config.address}
                                         onChange={(_event, val) => updateConfig('address', val)}
                                         isDisabled={isActive}
                                     />
                                 </FormGroup>
 
-                                <FormGroup label="Range DHCP" fieldId="ap-dhcp">
+                                <FormGroup label='Range DHCP' fieldId='ap-dhcp'>
                                     <Split hasGutter>
                                         <SplitItem>
                                             <TextInput
-                                                id="ap-dhcp-start"
+                                                id='ap-dhcp-start'
                                                 value={config.dhcpRangeStart}
                                                 onChange={(_event, val) => updateConfig('dhcpRangeStart', val)}
-                                                aria-label="DHCP range start"
+                                                aria-label='DHCP range start'
                                                 isDisabled={isActive}
                                             />
                                         </SplitItem>
                                         <SplitItem>—</SplitItem>
                                         <SplitItem>
                                             <TextInput
-                                                id="ap-dhcp-end"
+                                                id='ap-dhcp-end'
                                                 value={config.dhcpRangeEnd}
                                                 onChange={(_event, val) => updateConfig('dhcpRangeEnd', val)}
-                                                aria-label="DHCP range end"
+                                                aria-label='DHCP range end'
                                                 isDisabled={isActive}
                                             />
                                         </SplitItem>
@@ -383,9 +380,9 @@ export const AccessPointPage: React.FC = () => {
 
                         {/* IP for bridge mode (AP's own IP on the bridge) */}
                         {config.mode === 'bridge' && (
-                            <FormGroup label="Indirizzo IP del bridge" fieldId="ap-addr" helperText="IP assegnato all'interfaccia bridge del dispositivo">
+                            <FormGroup label='Indirizzo IP del bridge' fieldId='ap-addr' helperText="IP assegnato all'interfaccia bridge del dispositivo">
                                 <TextInput
-                                    id="ap-addr"
+                                    id='ap-addr'
                                     value={config.address}
                                     onChange={(_event, val) => updateConfig('address', val)}
                                     isDisabled={isActive}
@@ -395,7 +392,7 @@ export const AccessPointPage: React.FC = () => {
 
                         <ActionGroup>
                             <Button
-                                variant="primary"
+                                variant='primary'
                                 onClick={handleSave}
                                 isLoading={saving}
                                 isDisabled={saving || isActive}

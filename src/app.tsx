@@ -5,7 +5,7 @@ import {
     Tabs,
     Tab,
     TabTitleText,
-    TabTitleIcon,
+    TabTitleIcon
 } from '@patternfly/react-core';
 import { WifiIcon, ServerIcon, TachometerAltIcon } from '@patternfly/react-icons';
 
@@ -22,7 +22,7 @@ export const Application: React.FC = () => {
                 <Tabs
                     activeKey={activeTab}
                     onSelect={(_event, tabIndex) => setActiveTab(tabIndex)}
-                    aria-label="WiFi management tabs"
+                    aria-label='WiFi management tabs'
                 >
                     <Tab
                         eventKey={0}
