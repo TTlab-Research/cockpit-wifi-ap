@@ -88,12 +88,15 @@ case "$AP_MODE" in
 
         # Configure dnsmasq: full DHCP with gateway + DNS
         # bind-dynamic tolerates interfaces that appear after dnsmasq starts
+        # address=/<hostname>.local resolves device hostname for wireless clients
+        DEVICE_HOSTNAME=$(hostname)
         mkdir -p /etc/dnsmasq.d
         cat > /etc/dnsmasq.d/cockpit-wifi-ap.conf <<EOF
 interface=$AP_IFACE
 dhcp-range=${AP_DHCP_START},${AP_DHCP_END},255.255.255.0,8h
 dhcp-option=3,${AP_ADDR}
 dhcp-option=6,${AP_ADDR}
+address=/${DEVICE_HOSTNAME}.local/${AP_ADDR}
 bind-dynamic
 EOF
         systemctl restart dnsmasq 2>/dev/null || true
@@ -133,14 +136,17 @@ EOF
             sleep 1
         done
 
-        # Configure dnsmasq: DHCP with IP only, no gateway, no DNS
+        # Configure dnsmasq: DHCP IP only, no gateway, but local DNS for hostname resolution
+        # dhcp-option=6 set to AP_ADDR so clients can resolve device hostname
+        # No dhcp-option=3 so clients won't route internet traffic through this device
         # bind-dynamic tolerates interfaces that appear after dnsmasq starts
+        DEVICE_HOSTNAME=$(hostname)
         mkdir -p /etc/dnsmasq.d
         cat > /etc/dnsmasq.d/cockpit-wifi-ap.conf <<EOF
 interface=$AP_IFACE
 dhcp-range=${AP_DHCP_START},${AP_DHCP_END},255.255.255.0,8h
-# No dhcp-option=3 (gateway) -> client won't add a default route
-# No dhcp-option=6 (DNS) -> client won't use this for DNS
+dhcp-option=6,${AP_ADDR}
+address=/${DEVICE_HOSTNAME}.local/${AP_ADDR}
 bind-dynamic
 EOF
         systemctl restart dnsmasq 2>/dev/null || true
