@@ -31,11 +31,12 @@ AP_DHCP_START=$(read_config dhcpRangeStart "192.168.4.20")
 AP_DHCP_END=$(read_config dhcpRangeEnd "192.168.4.252")
 
 # nmcli uses "bg" for 2.4GHz and "a" for 5GHz.
-# When band is "auto", do not pass band or channel to nmcli.
+# "auto" defaults to bg/6: required because with unset regulatory domain
+# wpa_supplicant times out without an explicit band/channel.
 case "$AP_BAND" in
     2.4GHz) NM_BAND_ARGS="wifi.band bg wifi.channel ${AP_CHANNEL}" ;;
     5GHz)   NM_BAND_ARGS="wifi.band a  wifi.channel ${AP_CHANNEL}" ;;
-    *)      NM_BAND_ARGS="" ;;
+    *)      NM_BAND_ARGS="wifi.band bg wifi.channel 6" ;;
 esac
 
 if [ -z "$AP_SSID" ] || [ -z "$AP_PASS" ] || [ -z "$AP_IFACE" ]; then
@@ -124,10 +125,9 @@ case "$AP_MODE" in
             wifi.mode ap \
             $NM_BAND_ARGS \
             ipv4.method manual \
-            ipv4.addresses "${AP_ADDR}/24"
-
-        nmcli connection modify cockpit-wifi-ap \
+            ipv4.addresses "${AP_ADDR}/24" \
             wifi-sec.key-mgmt wpa-psk \
+            wifi-sec.auth-alg open \
             wifi-sec.psk "$AP_PASS"
 
         # Enable IP forwarding
@@ -172,10 +172,9 @@ case "$AP_MODE" in
             wifi.mode ap \
             $NM_BAND_ARGS \
             ipv4.method manual \
-            ipv4.addresses "${AP_ADDR}/24"
-
-        nmcli connection modify cockpit-wifi-ap \
+            ipv4.addresses "${AP_ADDR}/24" \
             wifi-sec.key-mgmt wpa-psk \
+            wifi-sec.auth-alg open \
             wifi-sec.psk "$AP_PASS"
 
         # Bring up AP first so the interface exists when dnsmasq starts
