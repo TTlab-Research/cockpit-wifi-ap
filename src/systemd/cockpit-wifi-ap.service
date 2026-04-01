@@ -1,0 +1,13 @@
+[Unit]
+Description=cockpit-wifi-ap Access Point
+After=network-online.target NetworkManager.service
+Wants=network-online.target NetworkManager.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/cockpit/wifi-ap/bin/ap-start.sh
+ExecStop=/usr/share/cockpit/wifi-ap/bin/ap-stop.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -70,13 +70,15 @@ function copyPlugin() {
                         fs.chmodSync(path.join(binDst, f), 0o755);
                     }
                 }
-                // Copy compiled po files
-                const poDst = path.join(distDir, 'po');
-                if (fs.existsSync(poDst)) {
-                    for (const f of fs.readdirSync(poDst)) {
-                        if (f.endsWith('.js')) {
-                            fs.copyFileSync(path.join(poDst, f), path.join(poDst, f));
-                        }
+                // Copy systemd unit files
+                const systemdSrc = 'src/systemd';
+                const systemdDst = path.join(distDir, 'systemd');
+                if (fs.existsSync(systemdSrc)) {
+                    if (!fs.existsSync(systemdDst)) {
+                        fs.mkdirSync(systemdDst, { recursive: true });
+                    }
+                    for (const f of fs.readdirSync(systemdSrc)) {
+                        fs.copyFileSync(path.join(systemdSrc, f), path.join(systemdDst, f));
                     }
                 }
             });

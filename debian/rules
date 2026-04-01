@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@
+	dh $@ --with=systemd
 
 override_dh_auto_build:
 	$(MAKE) pkg/lib
@@ -12,6 +12,9 @@ override_dh_auto_install:
 	install -d debian/cockpit-wifi-ap/usr/share/cockpit/wifi-ap
 	cp -r dist/* debian/cockpit-wifi-ap/usr/share/cockpit/wifi-ap/
 	install -d debian/cockpit-wifi-ap/etc/cockpit-wifi-ap
+	install -d debian/cockpit-wifi-ap/lib/systemd/system
+	install -m 644 dist/systemd/cockpit-wifi-ap.service \
+		debian/cockpit-wifi-ap/lib/systemd/system/cockpit-wifi-ap.service
 
 override_dh_auto_clean:
 	rm -rf dist node_modules

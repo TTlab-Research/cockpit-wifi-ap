@@ -192,4 +192,15 @@ EOF
         ;;
 esac
 
+# Mark enabled in config and enable systemd service for autostart on boot
+python3 -c "
+import json
+with open('${CONFIG_FILE}') as f:
+    c = json.load(f)
+c['enabled'] = True
+with open('${CONFIG_FILE}', 'w') as f:
+    json.dump(c, f, indent=2)
+"
+systemctl enable cockpit-wifi-ap.service 2>/dev/null || true
+
 echo '{"success": true}'

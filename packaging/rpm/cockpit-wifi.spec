@@ -37,12 +37,25 @@ Features:
 install -d %{buildroot}%{_datadir}/cockpit/wifi-ap
 cp -r cockpit/* %{buildroot}%{_datadir}/cockpit/wifi-ap/
 install -d %{buildroot}%{_sysconfdir}/cockpit-wifi-ap
+install -d %{buildroot}%{_unitdir}
+install -m 644 cockpit/systemd/cockpit-wifi-ap.service \
+    %{buildroot}%{_unitdir}/cockpit-wifi-ap.service
+
+%post
+%systemd_post cockpit-wifi-ap.service
+
+%preun
+%systemd_preun cockpit-wifi-ap.service
+
+%postun
+%systemd_postun_with_restart cockpit-wifi-ap.service
 
 %files
 %license LICENSE
 %doc README.md CHANGELOG.md
 %{_datadir}/cockpit/wifi-ap/
 %dir %{_sysconfdir}/cockpit-wifi-ap
+%{_unitdir}/cockpit-wifi-ap.service
 
 %changelog
 * Wed Apr 01 2026 TTlab <info@ttlab.it> - 0.1.2-1

@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: TTlab <info@ttlab.it>
 Vcs-Git: https://github.com/TTlab-Research/cockpit-wifi-ap.git
 Vcs-Browser: https://github.com/TTlab-Research/cockpit-wifi-ap
-Build-Depends: debhelper-compat (= 13), nodejs (>= 18), npm
+Build-Depends: debhelper-compat (= 13), dh-sequence-systemd, nodejs (>= 18), npm
 Standards-Version: 4.6.2
 Homepage: https://github.com/TTlab-Research/cockpit-wifi-ap
 
